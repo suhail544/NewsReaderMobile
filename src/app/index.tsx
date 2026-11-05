@@ -1,98 +1,105 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  StyleSheet,
+  FlatList,
+} from "react-native";
+import { steps } from "react-native-reanimated";
 
 export default function HomeScreen() {
+  const [language, setLanguage] = useState<'en' | 'ta'>('en')
+  const [search, setSearch] = useState('')
+
+  const articles = [
+  {
+    id: "1",
+    title: "Technology is transforming the world",
+    source: "BBC News",
+    category: "Technology",
+  },
+  {
+    id: "2",
+    title: "Latest developments in artificial intelligence",
+    source: "BBC News",
+    category: "Science",
+  },
+  {
+    id: "3",
+    title: "இந்தியாவின் சமீபத்திய செய்திகள்",
+    source: "Oneindia Tamil",
+    category: "India",
+  },
+];
+
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <View style={styles.container}> 
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.title}>News Reader</Text>
+          <Text style={styles.subtitle}>Your world. Your Language. Your News</Text>
+        </View>
+        <Pressable style={styles.languageButton}
+        onPress={()=> setLanguage((current)=> current === 'en' ? 'ta': 'en')}
+        >
+          <Text>{language === 'en' ? 'English' : 'Tamil'}</Text>
+        </Pressable>
+      </View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+      <TextInput placeholder="Search News" style={styles.searchInput} value={search} onChangeText={setSearch}/>
+      <Text style={styles.sectionTitle}>{language === 'en' ? 'Latest news' : "சமீபத்திய செய்திகள்"}</Text>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+      
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    backgroundColor: "#ffffff",
+    padding: 24,
+    paddingTop: 60,
   },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   title: {
-    textAlign: 'center',
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#111827",
   },
-  code: {
-    textTransform: 'uppercase',
+  subtitle: {
+    fontSize: 14,
+    color: "#6b7280",
+    marginTop: 6,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  languageButton: {
+    backgroundColor: "#eef2ff",
+    paddingVertical: 9,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  languageText: {
+    color: "#3730a3",
+    fontWeight: "600",
+  },
+  searchInput: {
+    backgroundColor: "#f3f4f6",
+    padding: 14,
+    borderRadius: 10,
+    marginTop: 28,
+    fontSize: 16,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 28,
+    color: "#111827",
   },
 });
