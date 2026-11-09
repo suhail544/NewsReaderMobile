@@ -11,6 +11,8 @@ import {
   RefreshControl,
 } from "react-native";
 import axios from "axios";
+import { useColorScheme } from "react-native";
+import { Colors } from "@/constants/theme";
 
 const API_URL = "http://192.168.1.6:3000";
 
@@ -38,6 +40,8 @@ function formatPublishedDate(date: string | null) {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const colorScheme = useColorScheme();
+  const theme = Colors[colorScheme === "dark" ? "dark" : "light"];
   const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState<"en" | "ta">("en");
   const [articles, setArticles] = useState<Article[]>([]);
@@ -145,6 +149,131 @@ export default function HomeScreen() {
     fetchArticles();
   }, [language, debouncedSearch]);
 
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+      padding: 20,
+      paddingTop: 60,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: "bold",
+      color: theme.text,
+    },
+    subtitle: {
+      fontSize: 15,
+      color: theme.textSecondary,
+      marginTop: 6,
+      marginBottom: 20,
+    },
+    articleCard: {
+      padding: 16,
+      backgroundColor: theme.backgroundElement,
+      borderRadius: 12,
+      marginBottom: 14,
+      borderWidth: 1,
+      borderColor: theme.backgroundSelected,
+    },
+    articleTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: theme.text,
+    },
+    description: {
+      fontSize: 14,
+      color: theme.textSecondary,
+      marginTop: 8,
+    },
+    source: {
+      fontSize: 12,
+      color: colorScheme === "dark" ? "#a5b4fc" : "#4f46e5",
+      marginTop: 10,
+      fontWeight: "600",
+    },
+    languageContainer: {
+      flexDirection: "row",
+      gap: 12,
+      marginBottom: 20,
+    },
+    languageButton: {
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      backgroundColor: theme.backgroundElement,
+      overflow: "hidden",
+    },
+    selectedLanguage: {
+      backgroundColor: colorScheme === "dark" ? "#4338ca" : "#3730a3",
+      color: "#ffffff",
+      fontWeight: "bold",
+    },
+    searchInput: {
+      backgroundColor: theme.backgroundElement,
+      color: theme.text,
+      padding: 14,
+      borderRadius: 10,
+      fontSize: 16,
+      marginBottom: 20,
+    },
+    articleMeta: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginTop: 12,
+    },
+    date: {
+      fontSize: 12,
+      color: theme.textSecondary,
+    },
+    emptyContainer: {
+      flexGrow: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 20,
+      paddingVertical: 60,
+    },
+    emptyTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: theme.text,
+    },
+    emptyDescription: {
+      fontSize: 14,
+      color: theme.textSecondary,
+      marginTop: 8,
+      textAlign: "center",
+    },
+    errorContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 20,
+    },
+    errorTitle: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: theme.text,
+    },
+    errorMessage: {
+      fontSize: 14,
+      color: theme.textSecondary,
+      marginTop: 8,
+      textAlign: "center",
+    },
+    retryButton: {
+      backgroundColor: colorScheme === "dark" ? "#4338ca" : "#3730a3",
+      paddingVertical: 12,
+      paddingHorizontal: 28,
+      borderRadius: 8,
+      marginTop: 20,
+    },
+    retryButtonText: {
+      color: "#ffffff",
+      fontWeight: "bold",
+    },
+  });
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>News Reader</Text>
@@ -154,6 +283,7 @@ export default function HomeScreen() {
         style={styles.searchInput}
         placeholder="Search"
         onChangeText={setSearch}
+        placeholderTextColor={theme.textSecondary}
         value={search}
       />
 
@@ -162,6 +292,7 @@ export default function HomeScreen() {
           style={[
             styles.languageButton,
             language === "en" && styles.selectedLanguage,
+            { color: language === "en" ? "#ffffff" : theme.text },
           ]}
           onPress={() => setLanguage("en")}
         >
@@ -172,6 +303,7 @@ export default function HomeScreen() {
           style={[
             styles.languageButton,
             language === "ta" && styles.selectedLanguage,
+            { color: language === "ta" ? "#ffffff" : theme.text },
           ]}
           onPress={() => setLanguage("ta")}
         >
@@ -252,138 +384,6 @@ export default function HomeScreen() {
       )}
     </View>
   );
+  
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-    padding: 20,
-    paddingTop: 60,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#111827",
-  },
-  subtitle: {
-    fontSize: 15,
-    color: "#6b7280",
-    marginTop: 6,
-    marginBottom: 20,
-  },
-  articleCard: {
-    padding: 16,
-    backgroundColor: "#f9fafb",
-    borderRadius: 12,
-    marginBottom: 14,
-    borderWidth: 1,
-    borderColor: "#e5e7eb",
-  },
-  articleTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#111827",
-  },
-  description: {
-    fontSize: 14,
-    color: "#4b5563",
-    marginTop: 8,
-  },
-  source: {
-    fontSize: 12,
-    color: "#4f46e5",
-    marginTop: 10,
-    fontWeight: "600",
-  },
-  languageContainer: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 20,
-  },
-
-  languageButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    backgroundColor: "#f3f4f6",
-    color: "#374151",
-    overflow: "hidden",
-  },
-
-  selectedLanguage: {
-    backgroundColor: "#3730a3",
-    color: "#ffffff",
-    fontWeight: "bold",
-  },
-  searchInput: {
-    backgroundColor: "#f3f4f6",
-    padding: 14,
-    borderRadius: 10,
-    fontSize: 16,
-    marginBottom: 20,
-  },
-  articleMeta: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 12,
-  },
-
-  date: {
-    fontSize: 12,
-    color: "#9ca3af",
-  },
-  emptyContainer: {
-    flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 60,
-  },
-
-  emptyTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#111827",
-  },
-
-  emptyDescription: {
-    fontSize: 14,
-    color: "#6b7280",
-    marginTop: 8,
-    textAlign: "center",
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-
-  errorTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#111827",
-  },
-
-  errorMessage: {
-    fontSize: 14,
-    color: "#6b7280",
-    marginTop: 8,
-    textAlign: "center",
-  },
-
-  retryButton: {
-    backgroundColor: "#3730a3",
-    paddingVertical: 12,
-    paddingHorizontal: 28,
-    borderRadius: 8,
-    marginTop: 20,
-  },
-
-  retryButtonText: {
-    color: "#ffffff",
-    fontWeight: "bold",
-  },
-});
