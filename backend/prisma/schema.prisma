@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Language {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  code      String    @unique
+  sources   NewsSource[]
+  articles  Article[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  articles  Article[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model NewsSource {
+  id          Int       @id @default(autoincrement())
+  name        String
+  websiteUrl  String
+  rssUrl      String    @unique
+
+  languageId  Int
+  language    Language  @relation(fields: [languageId], references: [id])
+
+  articles    Article[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Article {
+  id          Int       @id @default(autoincrement())
+
+  title       String
+  description String?
+  url         String    @unique
+  imageUrl    String?
+  publishedAt DateTime?
+
+  sourceId    Int
+  source      NewsSource @relation(fields: [sourceId], references: [id])
+
+  languageId  Int
+  language    Language   @relation(fields: [languageId], references: [id])
+
+  categoryId  Int?
+  category    Category?  @relation(fields: [categoryId], references: [id])
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
