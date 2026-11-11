@@ -14,7 +14,7 @@ import axios from "axios";
 import { useColorScheme } from "react-native";
 import { Colors } from "@/constants/theme";
 
-const API_URL = "http://192.168.1.6:3000";
+const API_URL = "https://newsreadermobile.onrender.com";
 
 type Article = {
   id: number;
@@ -69,7 +69,7 @@ export default function HomeScreen() {
           page: 1,
           limit: 10,
         },
-        timeout: 6000,
+        timeout: 20000,
       });
 
       console.log("Articles fetched successfully");

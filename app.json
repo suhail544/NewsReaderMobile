@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "NewsReaderMobile",
-    "slug": "NewsReaderMobile",
+    "name": "News Aggregator",
+    "slug": "news-aggregator",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.NewsReaderMobile"
+      "package": "com.newsaggregator.app"
     },
     "web": {
       "output": "server",
@@ -39,6 +39,16 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "6abb541b-079b-4b37-ad49-f7d10602c507"
+      }
     }
   }
 }
